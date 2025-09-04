@@ -1,7 +1,7 @@
 import config from "./config/index.js";
 import { connect, sendData } from "./websocket/client.js";
 import { generateRandomTemperature } from "./services/randomGenerator.js";
-import { getWeather } from "./services/weatherAPI.js"; // Futuro
+/* import { getWeather } from "./services/weatherAPI.js";  */
 import { logInfo } from "./utils/logger.js";
 
 // Decide qué fuente de datos usar
