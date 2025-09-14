@@ -19,6 +19,12 @@ Su función principal es **recibir datos de temperatura vía WebSocket desde el 
 1. Instalar dependencias
 npm install
 
+Dependencias usadas:
+ws → cliente WebSocket
+dotenv → carga de variables de entorno
+axios → Cliente HTTP para conectarse con APIs externas
+express → Para levantar un servidor HTTP
+
 2. Ejecutar en modo desarrollo
 npm run dev
 

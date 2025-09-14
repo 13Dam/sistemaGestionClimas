@@ -23,6 +23,11 @@ Instalar dependencias:
 
 npm install
 
+Dependencias usadas:
+ws → cliente WebSocket
+dotenv → carga de variables de entorno
+axios → Cliente HTTP para conectarse con APIs externas
+
 Iniciar el microservicio:
 node src/index.js
 
