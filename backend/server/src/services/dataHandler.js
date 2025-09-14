@@ -26,16 +26,12 @@ export async function handleIncomingData(rawMessage) {
       unit: "°C",
       timestamp: parsed.timestamp || Date.now(),
     };
-/* 
-    // 3. Enviar al webhook
-    if (config.WEBHOOK_URL) {
-      await postData(config.WEBHOOK_URL, normalizedData);
-    }
+    
 
     // 4. Enviar a la API base de datos (opcional, según flujo)
     if (config.API_URL) {
       await postData(config.API_URL, normalizedData);
-    } */
+    } 
 
     logger.info("Datos procesados y reenviados con éxito", normalizedData);
   } catch (error) {

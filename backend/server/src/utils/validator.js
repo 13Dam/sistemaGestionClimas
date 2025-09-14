@@ -1,5 +1,5 @@
 // src/utils/validator.js
-const allowedCities = ["Shangai", "Berlin", "Rio de Janeiro"];
+const allowedCities = ["Shanghai", "Berlin", "Rio de Janeiro"];
 
 function validatePayload(data) {
   const errors = [];
