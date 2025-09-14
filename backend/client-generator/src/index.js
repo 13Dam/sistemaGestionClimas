@@ -1,29 +1,38 @@
 import config from "./config/index.js";
 import { connect, sendData } from "./websocket/client.js";
 import { generateRandomTemperature } from "./services/randomGenerator.js";
-/* import { getWeather } from "./services/weatherAPI.js";  */
+import { getTemperature } from "./services/weatherAPI.js";
 import { logInfo } from "./utils/logger.js";
 
-// Decide qué fuente de datos usar
-async function fetchData(city) {
+// decide qué fuente de datos usar
+async function fetchData() {
   if (config.mode === "prod") {
-    return await getWeather(city); // Datos reales de API
+    //devuelve un array con datos de todas las ciudades
+    return await getAllTemperatures();
   } else {
-    return generateRandomTemperature(city); // Datos random
+    //genera datos random por ciudad
+    return config.cities.map((city) => generateRandomTemperature(city));
   }
 }
 
-// Iniciar microservicio
+//iniciar microservicio
 function start() {
   logInfo(`🚀 Iniciando client-generator en modo [${config.mode}]...`);
   connect();
 
   setInterval(async () => {
-    for (const city of config.cities) {
-      const data = await fetchData(city);
-      sendData(data);
+    try {
+      const dataArray = await fetchData();
+
+      // Enviar cada objeto individual al WebSocket server
+      for (const data of dataArray) {
+        sendData(data);
+      }
+    } catch (err) {
+      logError(`❌ Error al obtener o enviar datos: ${err.message}`);
     }
   }, config.frequency);
 }
 
 start();
+
