@@ -1,4 +1,4 @@
-const allowedCities = ["Shanghai", "Berlin", "Rio de Janeiro"];
+const allowedCities = ["Shanghai", "Berlin", "Rio De Janeiro"];
 
 function validatePayload(data) {
   const errors = [];

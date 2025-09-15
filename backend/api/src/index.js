@@ -1,5 +1,6 @@
 import express from 'express';
 import config from './config/index.js';
+import cors from "cors";
 import { connectMongo } from './db/mongo.js';
 import temperatureRoutes from './routes/temperature.js';
 import errorHandler from './middlewares/errorHandler.js';
@@ -9,6 +10,7 @@ const app = express();
 
 //middleware para parsear JSON
 app.use(express.json());
+app.use(cors());
 
 //middleware de logging de requests
 app.use((req, res, next) => {

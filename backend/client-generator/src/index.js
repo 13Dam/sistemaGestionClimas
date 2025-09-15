@@ -15,7 +15,36 @@ async function fetchData() {
   }
 }
 
-//iniciar microservicio
+// Función que obtiene y envía los datos al WebSocket
+async function sendTemperatures() {
+  try {
+    const dataArray = await fetchData();
+
+    // Enviar cada objeto individual al WebSocket server
+    for (const data of dataArray) {
+      sendData(data);
+      logInfo(`📤 Enviado: ${JSON.stringify(data)}`);
+    }
+  } catch (err) {
+    logError(`❌ Error al obtener o enviar datos: ${err.message}`);
+  }
+}
+
+// Iniciar microservicio
+function start() {
+  logInfo(`🚀 Iniciando client-generator en modo [${config.mode}]...`);
+  connect();
+
+  // 1️⃣ Ejecutar inmediatamente al iniciar
+  sendTemperatures();
+
+  // 2️⃣ Ejecutar periódicamente según la frecuencia
+  setInterval(sendTemperatures, config.frequency);
+}
+
+start();
+
+/* //iniciar microservicio
 function start() {
   logInfo(`🚀 Iniciando client-generator en modo [${config.mode}]...`);
   connect();
@@ -34,5 +63,5 @@ function start() {
   }, config.frequency);
 }
 
-start();
+start(); */
 
