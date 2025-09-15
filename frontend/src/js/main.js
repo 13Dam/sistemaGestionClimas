@@ -49,7 +49,7 @@ async function actualizarPanelCiudad(cityKey, isChecked) {
       // Will display time in 10:30:23 format
       var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
       panel.querySelector("p.display-6").textContent = `${latest.temperature} °C`;
-      panel.querySelector("p.small").textContent = `⏰ ${latest.formattedTime}`;
+      panel.querySelector("p.small").textContent = `⏰ ${formattedTime}`;
     } else {
       panel.querySelector("p.display-6").textContent = "- °C";
       panel.querySelector("p.small").textContent = "⏰ -";
