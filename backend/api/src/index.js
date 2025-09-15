@@ -1,50 +1,36 @@
-import express from "express";
-import dotenv from "dotenv";
-import cors from "cors";
-import logger from "./utils/logger.js";
-import config from "./config/index.js";
-import { connectMongo } from "./db/mongo.js";
-import readingsRouter from "./routes/readings.js";
-import aggregatesRouter from "./routes/aggregates.js";
-import seedRouter from "./routes/seed.js";
-import { getWeather } from "./services/weatherService.js"; // tu import
-
-dotenv.config();
+import express from 'express';
+import config from './config/index.js';
+import { connectMongo } from './db/mongo.js';
+import temperatureRoutes from './routes/temperature.js';
+import errorHandler from './middlewares/errorHandler.js';
+import logger from './utils/logger.js';
 
 const app = express();
-app.use(cors());
-app.use(express.json({ limit: "200kb" }));
 
-// Routers existentes
-app.use("/api/readings", readingsRouter);
-app.use("/api/aggregates", aggregatesRouter);
-app.use("/api/seed", seedRouter);
+//middleware para parsear JSON
+app.use(express.json());
 
-// Tu router de weather
-const weatherRouter = express.Router();
-weatherRouter.get("/weather/:city", async (req, res) => {
+//middleware de logging de requests
+app.use((req, res, next) => {
+  logger.info(`${req.method} ${req.originalUrl}`);
+  next();
+});
+
+//rutas
+app.use('/api', temperatureRoutes);
+
+//middleware de manejo de errores (siempre al final)
+app.use(errorHandler);
+
+//conectar a MongoDB y levantar el servidor
+(async () => {
   try {
-    const weather = await getWeather(req.params.city);
-    res.json(weather);
+    await connectMongo(`${config.MONGO_URI}/${config.DB_NAME}`);
+    app.listen(config.PORT, () => {
+      logger.info(`API corriendo en puerto ${config.PORT} | MODO: ${config.MODE}`);
+    });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    logger.error('No se pudo iniciar el servidor', err);
+    process.exit(1);
   }
-});
-app.use(weatherRouter);
-
-app.use((err, req, res, next) => {
-  logger.error("Unhandled error", { msg: err.message, stack: err.stack });
-  res.status(500).json({ error: "internal_error" });
-});
-
-async function bootstrap() {
-  await connectMongo(config.MONGO_URI);
-  app.listen(config.PORT, () => {
-    logger.info(`MS4 Readings escuchando en http://localhost:${config.PORT} [MODE=${config.MODE}]`);
-  });
-}
-
-bootstrap().catch(err => {
-  logger.error("Fallo al iniciar", err);
-  process.exit(1);
-});
+})();

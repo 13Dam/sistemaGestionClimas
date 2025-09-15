@@ -1,9 +1,33 @@
-export function validatePayload(p, allowedCities = ["Shanghai","Berlin","Rio de Janeiro"]) {
+/**
+ * Valida el payload de temperatura
+ * @param {Object} data - Objeto recibido en el POST
+ * @returns {Object} - { valid: Boolean, errors: Array<String> }
+ */
+export function validateTemperaturePayload(data) {
   const errors = [];
-  if (!p || typeof p !== "object") { errors.push("payload_must_be_object"); return { valid: false, errors }; }
-  if (!p.city || !allowedCities.includes(p.city)) errors.push(`invalid_city:${p.city}`);
-  if (typeof p.temperature !== "number" || Number.isNaN(p.temperature)) errors.push("temperature_must_be_number");
-  if (p.unit && p.unit !== "°C") errors.push("unit_must_be_Celsius");
-  if (typeof p.timestamp !== "number" || !Number.isFinite(p.timestamp)) errors.push("timestamp_invalid");
-  return { valid: errors.length === 0, errors };
+
+  if (!data.city || typeof data.city !== 'string') {
+    errors.push("El campo 'city' es obligatorio y debe ser un string.");
+  }
+
+  if (data.temperature === undefined || typeof data.temperature !== 'number') {
+    errors.push("El campo 'temperature' es obligatorio y debe ser un número.");
+  }
+
+  if (!data.unit || typeof data.unit !== 'string') {
+    errors.push("El campo 'unit' es obligatorio y debe ser un string.");
+  }
+
+  if (!data.timestamp || typeof data.timestamp !== 'number') {
+    errors.push("El campo 'timestamp' es obligatorio y debe ser un número.");
+  }
+
+  if (!data.source || typeof data.source !== 'string') {
+    errors.push("El campo 'source' es obligatorio y debe ser un string.");
+  }
+
+  return {
+    valid: errors.length === 0,
+    errors
+  };
 }
