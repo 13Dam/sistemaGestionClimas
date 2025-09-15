@@ -1,42 +1,44 @@
-import config from "../config/index.js";
-
+/**
+ * Valida el payload recibido en el webhook
+ * @param {Object} data - Payload a validar
+ * @returns {Object} - { isValid: boolean, errors: string[] }
+ */
 export function validatePayload(data) {
   const errors = [];
 
+  // Verificar que data sea un objeto
   if (!data || typeof data !== "object") {
-    errors.push("payload_must_be_object");
-    return { valid: false, errors };
+    errors.push("Payload no es un objeto válido");
+    return { isValid: false, errors };
   }
 
-  // Ciudad (ojo: que coincida con tus MS1/MS2; usa "Shanghai" no "Shangai")
-  if (!data.city || !config.ALLOWED_CITIES.includes(data.city)) {
-    errors.push(`invalid_city:${data.city}`);
+  // city: obligatorio, string no vacío
+  if (!data.city || typeof data.city !== "string" || !data.city.trim()) {
+    errors.push("city es obligatorio y debe ser un string no vacío");
   }
 
-  // Temperatura
-  if (typeof data.temperature !== "number" || Number.isNaN(data.temperature)) {
-    errors.push("temperature_must_be_number");
+  // temperature: obligatorio, número
+  if (data.temperature === undefined || typeof data.temperature !== "number") {
+    errors.push("temperature es obligatorio y debe ser un número");
   }
 
-  // Unidad
-  if (data.unit && data.unit !== "°C") {
-    errors.push("unit_must_be_Celsius");
+  // unit: opcional, si existe debe ser string
+  if (data.unit !== undefined && typeof data.unit !== "string") {
+    errors.push("unit debe ser un string si está presente");
   }
 
-  // Timestamp (ms UTC)
-  if (typeof data.timestamp !== "number" || !Number.isFinite(data.timestamp)) {
-    errors.push("timestamp_invalid");
+  // timestamp: obligatorio, número o string que pueda convertirse a número
+  if (data.timestamp === undefined || isNaN(Number(data.timestamp))) {
+    errors.push("timestamp es obligatorio y debe ser un número válido");
   }
 
-  return { valid: errors.length === 0, errors };
-}
+  // source: obligatorio, string no vacío
+  if (!data.source || typeof data.source !== "string" || !data.source.trim()) {
+    errors.push("source es obligatorio y debe ser un string no vacío");
+  }
 
-export function normalize(data) {
   return {
-    city: data.city,
-    temperature: Number(data.temperature),
-    unit: "°C",
-    timestamp: data.timestamp ?? Date.now(),
-    source: data.source ?? "test" // opcional
+    isValid: errors.length === 0,
+    errors,
   };
 }

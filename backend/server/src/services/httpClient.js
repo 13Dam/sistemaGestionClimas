@@ -1,4 +1,3 @@
-// src/services/httpClient.js
 import axios from "axios";
 import logger from "../utils/logger.js";
 import config from "../config/index.js";

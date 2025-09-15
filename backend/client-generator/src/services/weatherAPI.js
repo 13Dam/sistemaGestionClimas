@@ -24,6 +24,7 @@ export async function getTemperature(city) {
       city: data.location.name,
       temperature: data.current.temp_c,
       timestamp: new Date().toISOString(), // UTC
+      source: "api"
     };
   } catch (error) {
     logError(`❌ Error al obtener datos de clima para ${city}: ${error.message}`);

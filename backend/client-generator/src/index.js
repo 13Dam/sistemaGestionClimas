@@ -1,10 +1,10 @@
 import config from "./config/index.js";
 import { connect, sendData } from "./websocket/client.js";
 import { generateRandomTemperature } from "./services/randomGenerator.js";
-import { getTemperature } from "./services/weatherAPI.js";
-import { logInfo } from "./utils/logger.js";
+import { getTemperature, getAllTemperatures } from "./services/weatherAPI.js";
+import { logInfo, logError } from "./utils/logger.js";
 
-// decide qué fuente de datos usar
+//decide qué fuente de datos usar
 async function fetchData() {
   if (config.mode === "prod") {
     //devuelve un array con datos de todas las ciudades

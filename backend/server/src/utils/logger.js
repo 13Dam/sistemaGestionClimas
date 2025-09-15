@@ -1,4 +1,3 @@
-// src/utils/logger.js
 const levels = {
   info: "INFO",
   warn: "WARN",
