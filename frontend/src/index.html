@@ -98,7 +98,7 @@
   <div class="card-body-historico">
     <h5 class="card-title">Histórico de Datos</h5>
     <div class="table-responsive mb-3">
-      <table class="table table-striped table-hover">
+      <table id="tablaHistorico" class="table table-striped table-hover">
         <thead class="table-light">
           <tr>
             <th>Ciudad</th>
@@ -126,11 +126,8 @@
       </table>
     </div>
     <div class="d-flex gap-2">
-      <button class="btn btn-sm btn-outline-primary">
-        📄 Exportar CSV
-      </button>
       <button id="btnLooker" class="btn btn-sm btn-warning fw-bold">
-        📊 Analizar en Looker
+        📊 Analizar en Power bi
       </button>
     </div>
   </div>
@@ -163,9 +160,22 @@
 
   </div>
 
+  <!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+<!-- jQuery (requerido por DataTables) -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <!-- Chart.js (para los gráficos en el futuro) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/date-fns@2.30.0/dist/date-fns.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@2.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+
   <script src="./js/main.js"></script>
 </body>
 </html>
