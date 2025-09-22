@@ -10,9 +10,11 @@ const config = {
   frequency: process.env.MODE === "prod" ? 30 * 60 * 1000 : 5000, 
   // 30 min en prod, 5s en test
 
-  cities: process.env.CITIES
-    ? process.env.CITIES.split(",").map((c) => c.trim())
-    : ["Shanghai", "Berlin", "Rio de Janeiro"],
+  cities: process.env.MODE === "prod"
+  ? ["Shanghai", "Berlin", "Rio De Janeiro"] // nombres normalizados para la API
+  : (process.env.CITIES
+      ? process.env.CITIES.split(",").map((c) => c.trim())
+      : ["Shanghai", "Berlin", "Rio de Janeiro"]),
 
   // configuración para WeatherAPI
   weatherApiKey: process.env.WEATHER_API_KEY || "",

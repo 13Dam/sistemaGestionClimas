@@ -15,20 +15,21 @@ async function fetchData() {
   }
 }
 
-// Función que obtiene y envía los datos al WebSocket
 async function sendTemperatures() {
   try {
     const dataArray = await fetchData();
 
     // Enviar cada objeto individual al WebSocket server
     for (const data of dataArray) {
-      sendData(data);
-      logInfo(`📤 Enviado: ${JSON.stringify(data)}`);
+      sendData(data); // 👈 ya manda y loguea
+      // ❌ sacá este log extra
+      // logInfo(`📤 Enviado: ${JSON.stringify(data)}`);
     }
   } catch (err) {
     logError(`❌ Error al obtener o enviar datos: ${err.message}`);
   }
 }
+
 
 // Iniciar microservicio
 function start() {

@@ -124,5 +124,5 @@ function actualizarExtremos() {
 
 
 document.getElementById("btnLooker").addEventListener("click", () => {
-    window.open("https://lookerstudio.google.com/reporting/f5c1582d-67c3-49ca-9ac4-286c31be0d51", "_blank");
+    window.open("https://app.powerbi.com/view?r=eyJrIjoiNGVkMDVlMzYtN2M0My00NDZkLTgxNGEtYjk2NjViYWM0N2Q3IiwidCI6ImFmZWNhMzc2LTNjOGUtNDM1MS1iODMzLTllYWY4YzI2ODMwMCIsImMiOjR9", "_blank");
   });
