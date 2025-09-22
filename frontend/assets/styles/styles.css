@@ -35,23 +35,71 @@ h1 {
 }
 
 /* ======== Cards de Ciudades ======== */
-.card-body-shanghai {
+.card-body-ciudadFria {
   background: #cceeff; /* Azul pastel */
   border-radius: 12px;
   padding: 20px;
 }
 
-.card-body-berlin {
-  background: #d4f4dd; /* Verde pastel claro */
-  border-radius: 12px;
-  padding: 20px;
-}
-
-.card-body-rio {
+.card-body-ciudadCalida {
   background: #ffefcc; /* Naranja pastel */
   border-radius: 12px;
   padding: 20px;
 }
+
+.card-body-shanghai {
+  border-radius: 12px;
+  padding: 20px;
+  background: url("../images/Shanghai.png") center/cover no-repeat;
+  position: relative;
+  color: white; /* mejora contraste */
+}
+
+.card-body-berlin {
+  border-radius: 12px;
+  padding: 20px;
+  background: url("../images/Berlin.png") center/cover no-repeat;
+  position: relative;
+  color: white;
+}
+
+.card-body-rio {
+  border-radius: 12px;
+  padding: 20px;
+  background: url("../images/RioDeJaneiro.png") center/cover no-repeat;
+  position: relative;
+  color: white;
+}
+
+.text-outline {
+  text-shadow: 
+    -1px -1px 0 #000000,  
+     1px -1px 0 #000000,
+    -1px  1px 0 #000000,
+     1px  1px 0 #000000; /* contorno blanco */
+}
+
+/* capa semitransparente sobre la imagen */
+.card-body-shanghai::before,
+.card-body-berlin::before,
+.card-body-rio::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.4); /* negro transparente */
+  border-radius: 12px;
+  z-index: 0;
+}
+
+/* asegurar que el contenido quede encima de la capa */
+.card-body-shanghai > *,
+.card-body-berlin > *,
+.card-body-rio > * {
+  position: relative;
+  z-index: 1;
+}
+
 
 /* ======== Gráfico ======== */
 .card-body-temperatura-tiempo {
