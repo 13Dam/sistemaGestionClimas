@@ -283,10 +283,20 @@ async function cargarHistorico() {
 
 // Función para actualizar estadísticas dinámicamente
 function actualizarEstadisticas(data) {
+  // Fecha de hoy a medianoche
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
+
+  // Filtrar solo datos de hoy
+  const datosHoy = data.filter(item => {
+    const fechaItem = new Date(item.receivedAt);
+    return fechaItem >= hoy; // solo registros de hoy en adelante
+  });
+
   // Agrupamos datos por ciudad
   const stats = {};
 
-  data.forEach(item => {
+  datosHoy.forEach(item => {
     const ciudad = item.city;
     if (!stats[ciudad]) {
       stats[ciudad] = {
