@@ -131,17 +131,24 @@ document.addEventListener("DOMContentLoaded", async () => {
       const nuevaUltimaFecha = data.length ? new Date(data[0].receivedAt) : null;
 
       if (!ultimaFecha || (nuevaUltimaFecha && nuevaUltimaFecha > ultimaFecha)) {
+        // 🔹 actualizar gráfico
         renderChart(data);
+
+        // 🔹 actualizar paneles
         Object.keys(cityMap).forEach(cityKey => {
           const checkbox = document.getElementById(cityKey);
           actualizarPanelCiudad(cityKey, checkbox.checked);
         });
+
+        // 🔹 actualizar tabla e estadísticas
+        await cargarHistorico();
+
         ultimaFecha = nuevaUltimaFecha;
       }
     } catch (err) {
       console.error("Error actualizando automáticamente:", err);
     }
-  }, 10 * 1000); // podés dejar 10s si querés comprobar constantemente, pero solo actualiza con datos nuevos
+  }, 10 * 1000);
 
 });
 
