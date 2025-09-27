@@ -3,28 +3,26 @@ import config from './config/index.js';
 import cors from "cors";
 import { connectMongo } from './db/mongo.js';
 import temperatureRoutes from './routes/temperature.js';
+import authRoutes from './routes/auth.js'; // <-- login
 import errorHandler from './middlewares/errorHandler.js';
 import logger from './utils/logger.js';
 
 const app = express();
-
-//middleware para parsear JSON
 app.use(express.json());
 app.use(cors());
 
-//middleware de logging de requests
 app.use((req, res, next) => {
   logger.info(`${req.method} ${req.originalUrl}`);
   next();
 });
 
-//rutas
+// rutas
 app.use('/api', temperatureRoutes);
+app.use('/api', authRoutes); // <-- ruta login
 
-//middleware de manejo de errores (siempre al final)
 app.use(errorHandler);
 
-//conectar a MongoDB y levantar el servidor
+// conectar a Mongo y levantar servidor
 (async () => {
   try {
     await connectMongo(`${config.MONGO_URI}/${config.DB_NAME}`);
