@@ -10,7 +10,7 @@ router.post('/login', (req, res) => {
 
   // TODO: reemplazar con DB real o validación segura
   if (username === 'admin' && password === '1234') {
-    const token = jwt.sign({ username }, config.JWT_SECRET, { expiresIn: '2h' });
+    const token = jwt.sign({ username }, config.JWT_SECRET, { expiresIn: '24h' });
     return res.json({ token });
   }
 
