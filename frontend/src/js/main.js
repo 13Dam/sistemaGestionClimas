@@ -337,6 +337,52 @@ function actualizarEstadisticas(data) {
   });
 }
 
+// Callback para cuando Google responde con el token del usuario
+async function handleGoogleCredentialResponse(response) {
+  const { credential } = response; // Este es el JWT de Google
+
+  try {
+    const res = await fetch('http://localhost:3000/api/auth/google', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ token: credential }),
+    });
+
+    if (!res.ok) {
+      throw new Error('Falló la autenticación en el backend');
+    }
+
+    const { accessToken, refreshToken } = await res.json();
+
+    // Guarda los tokens para usarlos en futuras peticiones
+    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('refreshToken', refreshToken);
+
+    alert('¡Inicio de sesión con Google exitoso!');
+    // Aquí podrías cerrar el offcanvas y actualizar la UI
+    const offcanvas = bootstrap.Offcanvas.getInstance('#offcanvasNavbar');
+    offcanvas.hide();
+
+  } catch (error) {
+    console.error('Error al iniciar sesión con Google:', error);
+    alert('Hubo un problema al iniciar sesión. Inténtalo de nuevo.');
+  }
+}
+
+// Inicialización del cliente de Google
+window.onload = function () {
+  google.accounts.id.initialize({
+    client_id: '457944483848-om6gckq8f55ppluf7b9q4e7ni0432p4c.apps.googleusercontent.com', // ⚠️ ¡Reemplaza esto con tu ID de cliente real!
+    callback: handleGoogleCredentialResponse,
+  });
+  google.accounts.id.renderButton(
+    document.getElementById('google-btn'),
+    { theme: 'outline', size: 'large', type: 'standard', text: 'signin_with', width: '230' } // Personaliza el botón
+  );
+  google.accounts.id.prompt(); // Muestra el popup de "One Tap"
+};
 
 
 document.getElementById("btnLooker").addEventListener("click", () => {
