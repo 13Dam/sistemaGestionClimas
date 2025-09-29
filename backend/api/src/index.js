@@ -1,11 +1,15 @@
 import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import config from './config/index.js';
 import cors from "cors";
 import { connectMongo } from './db/mongo.js';
 import temperatureRoutes from './routes/temperature.js';
-import authRoutes from './routes/auth.js'; // <-- login
 import errorHandler from './middlewares/errorHandler.js';
 import logger from './utils/logger.js';
+import googleAuthRoutes from './routes/authRoutes.js';
+
+
 
 const app = express();
 app.use(express.json());
@@ -16,10 +20,11 @@ app.use((req, res, next) => {
   next();
 });
 
-// rutas
+// rutas API
 app.use('/api', temperatureRoutes);
-app.use('/api', authRoutes); // <-- ruta login
+app.use('/api', googleAuthRoutes);
 
+// middleware de errores
 app.use(errorHandler);
 
 // conectar a Mongo y levantar servidor

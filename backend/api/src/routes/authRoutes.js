@@ -1,8 +1,10 @@
-const express = require('express');
+// routes/authRoutes.js
+import express from 'express';
+import { googleSignIn } from '../controllers/authController.js';
+
 const router = express.Router();
-const authController = require('../controllers/authController');
 
 // Ruta para el inicio de sesión con Google
-router.post('/google', authController.googleSignIn);
+router.post('/google', googleSignIn);
 
-module.exports = router;
+export default router;
