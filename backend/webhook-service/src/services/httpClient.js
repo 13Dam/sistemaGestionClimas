@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const FINAL_API_URL = process.env.FINAL_API_URL || "http://localhost:5000/api/temperature";
+const MS3_SERVICE_TOKEN = process.env.MS3_SERVICE_TOKEN;
 const MAX_RETRIES = 3;
 const RETRY_DELAY_MS = 1000;
 
@@ -20,7 +21,7 @@ export async function sendToFinalAPI(data) {
       await axios.post(FINAL_API_URL, data, {
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${process.env.API_TOKEN || ""}` // para el TOKEN
+          "x-service-token": MS3_SERVICE_TOKEN,
         },
         timeout: 5000,
       });

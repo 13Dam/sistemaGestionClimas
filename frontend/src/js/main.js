@@ -3,7 +3,15 @@ async function checkEstadoApi() {
   const badge = document.getElementById("EstadoApi");
 
   try {
-    const res = await fetch("http://localhost:3000/api/temperature", { method: "GET" });
+    const token = localStorage.getItem('accessToken');
+    const res = await fetch("http://localhost:3000/api/temperature", {
+      headers: {
+        "Authorization": `Bearer ${token}`, // ⚠️ Esto es clave
+        "Content-Type": "application/json"
+      }
+    });
+    const data = await res.json();
+
     if (res.ok) {
       // API corriendo
       badge.classList.remove("bg-danger");
@@ -93,7 +101,13 @@ Object.keys(cityMap).forEach(cityKey => {
   const checkbox = document.getElementById(cityKey);
   checkbox.addEventListener("change", async () => {
     try {
-      const res = await fetch("http://localhost:3000/api/temperature");
+      const token = localStorage.getItem('accessToken');
+      const res = await fetch("http://localhost:3000/api/temperature", {
+        headers: {
+          "Authorization": `Bearer ${token}`, // ⚠️ Esto es clave
+          "Content-Type": "application/json"
+        }
+      });
       const data = await res.json();
       renderChart(data); // actualizar gráfico sin tocar la tabla
     } catch (err) {
@@ -125,8 +139,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   setInterval(async () => {
     try {
-      const res = await fetch("http://localhost:3000/api/temperature");
+      const token = localStorage.getItem('accessToken');
+      const res = await fetch("http://localhost:3000/api/temperature", {
+        headers: {
+          "Authorization": `Bearer ${token}`, // ⚠️ Esto es clave
+          "Content-Type": "application/json"
+        }
+      });
       const data = await res.json();
+
 
       const nuevaUltimaFecha = data.length ? new Date(data[0].receivedAt) : null;
 
@@ -166,8 +187,15 @@ async function actualizarPanelCiudad(cityKey, isChecked) {
   }
 
   try {
-    const res = await fetch(`http://localhost:3000/api/temperature/${cityName}`);
+    const token = localStorage.getItem('accessToken');
+    const res = await fetch(`http://localhost:3000/api/temperature/${cityName}`, {
+      headers: {
+        "Authorization": `Bearer ${token}`, // ⚠️ Esto es clave
+        "Content-Type": "application/json"
+      }
+    });
     const data = await res.json();
+
     console.log("API response for", cityName, ":", data); //debu
 
     if (data.length > 0) {
@@ -232,8 +260,15 @@ function actualizarExtremos() {
 }
 async function cargarHistorico() {
   try {
-    const res = await fetch("http://localhost:3000/api/temperature");
+    const token = localStorage.getItem('accessToken');
+    const res = await fetch("http://localhost:3000/api/temperature", {
+      headers: {
+        "Authorization": `Bearer ${token}`, // ⚠️ Esto es clave
+        "Content-Type": "application/json"
+      }
+    });
     const data = await res.json();
+
 
     const tbody = document.querySelector("#tablaHistorico tbody");
     tbody.innerHTML = ""; // limpiar tabla
@@ -342,7 +377,7 @@ async function handleGoogleCredentialResponse(response) {
   const { credential } = response; // Este es el JWT de Google
 
   try {
-    const res = await fetch('http://localhost:3000/api/auth/google', {
+    const res = await fetch('http://localhost:3000/api/google', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -374,7 +409,8 @@ async function handleGoogleCredentialResponse(response) {
 // Inicialización del cliente de Google
 window.onload = function () {
   google.accounts.id.initialize({
-    client_id: '457944483848-om6gckq8f55ppluf7b9q4e7ni0432p4c.apps.googleusercontent.com', // ⚠️ ¡Reemplaza esto con tu ID de cliente real!
+    client_id: '655131654507-4i9e788ntgojj8le6f6arju6l011o1sa.apps.googleusercontent.com',
+    // ⚠️ ¡Reemplaza esto con tu ID de cliente real!
     callback: handleGoogleCredentialResponse,
   });
   google.accounts.id.renderButton(
