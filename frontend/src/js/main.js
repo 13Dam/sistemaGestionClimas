@@ -118,7 +118,22 @@ Object.keys(cityMap).forEach(cityKey => {
 
 //Objeto global para ir guardando las últimas temperaturas
 const temperaturasActuales = {};
+
 document.addEventListener("DOMContentLoaded", async () => {
+  // =====================
+  // 🔹 LOGIN GOOGLE
+  // =====================
+  const nombre = localStorage.getItem("userName");
+  const foto = localStorage.getItem("userPicture");
+  if (nombre && foto) {
+    mostrarUsuario(nombre, foto);
+  } else {
+    mostrarLogin();
+  }
+
+  // =====================
+  // 🔹 API TEMPERATURAS
+  // =====================
   checkEstadoApi();
 
   const data = await cargarHistorico();
@@ -146,8 +161,8 @@ document.addEventListener("DOMContentLoaded", async () => {
           "Content-Type": "application/json"
         }
       });
-      const data = await res.json();
 
+      const data = await res.json();
 
       const nuevaUltimaFecha = data.length ? new Date(data[0].receivedAt) : null;
 
@@ -170,10 +185,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       console.error("Error actualizando automáticamente:", err);
     }
   }, 10 * 1000);
-
 });
-
-
 
 //función para actualizar un panel según selección
 async function actualizarPanelCiudad(cityKey, isChecked) {
@@ -258,6 +270,7 @@ function actualizarExtremos() {
   cardCalida.querySelector("p.display-5").textContent = `${masCalida.temperatura} °C`;
   cardCalida.querySelector("p.text-black.fs-5").textContent = `📍 ${masCalida.ciudad}`;
 }
+
 async function cargarHistorico() {
   try {
     const token = localStorage.getItem('accessToken');
@@ -372,33 +385,33 @@ function actualizarEstadisticas(data) {
   });
 }
 
-// Callback para cuando Google responde con el token del usuario
 async function handleGoogleCredentialResponse(response) {
-  const { credential } = response; // Este es el JWT de Google
+  const { credential } = response;
 
   try {
     const res = await fetch('http://localhost:3000/api/google', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token: credential }),
     });
 
-    if (!res.ok) {
-      throw new Error('Falló la autenticación en el backend');
-    }
+    if (!res.ok) throw new Error('Falló la autenticación en el backend');
 
-    const { accessToken, refreshToken } = await res.json();
+    const { accessToken, refreshToken, user } = await res.json();
 
-    // Guarda los tokens para usarlos en futuras peticiones
+    // Guardar tokens y datos del usuario en localStorage
     localStorage.setItem('accessToken', accessToken);
     localStorage.setItem('refreshToken', refreshToken);
+    localStorage.setItem('userName', user.name);
+    localStorage.setItem('userEmail', user.email);
+    localStorage.setItem('userPicture', user.picture);
 
-    alert('¡Inicio de sesión con Google exitoso!');
-    // Aquí podrías cerrar el offcanvas y actualizar la UI
-    const offcanvas = bootstrap.Offcanvas.getInstance('#offcanvasNavbar');
-    offcanvas.hide();
+    // Mostrar en la UI (nombre y foto)
+    mostrarUsuario(user.name, user.picture);
+
+    const loginModal = bootstrap.Modal.getInstance(document.getElementById("loginModal"));
+    if (loginModal) loginModal.hide();
+
 
   } catch (error) {
     console.error('Error al iniciar sesión con Google:', error);
@@ -406,20 +419,52 @@ async function handleGoogleCredentialResponse(response) {
   }
 }
 
-// Inicialización del cliente de Google
 window.onload = function () {
   google.accounts.id.initialize({
     client_id: '655131654507-4i9e788ntgojj8le6f6arju6l011o1sa.apps.googleusercontent.com',
-    // ⚠️ ¡Reemplaza esto con tu ID de cliente real!
     callback: handleGoogleCredentialResponse,
   });
+
   google.accounts.id.renderButton(
     document.getElementById('google-btn'),
-    { theme: 'outline', size: 'large', type: 'standard', text: 'signin_with', width: '230' } // Personaliza el botón
+    { theme: 'outline', size: 'large', type: 'standard', text: 'signin_with', width: '230' }
   );
-  google.accounts.id.prompt(); // Muestra el popup de "One Tap"
+
+  // 🔹 Solo mostrar el popup de Google si no hay sesión
+  if (!localStorage.getItem('accessToken')) {
+    google.accounts.id.prompt();
+  }
 };
 
+
+function mostrarUsuario(nombre, foto) {
+  document.getElementById("login-container").classList.add("d-none");
+  document.getElementById("user-container").classList.remove("d-none");
+
+  document.getElementById("user-info").innerHTML = `
+    <img src="${foto}" alt="Foto" class="rounded-circle me-2" width="32" height="32">
+    ${nombre}
+  `;
+
+  document.getElementById("app-container").classList.remove("d-none");
+
+  // 🔹 Cerrar modal
+  const loginModal = bootstrap.Modal.getInstance(document.getElementById("loginModal"));
+  if (loginModal) loginModal.hide();
+}
+
+function mostrarLogin() {
+  document.getElementById("login-container").classList.remove("d-none");
+  document.getElementById("user-container").classList.add("d-none");
+  document.getElementById("app-container").classList.add("d-none");
+}
+
+
+
+document.getElementById("logout-btn").addEventListener("click", () => {
+  localStorage.clear(); // borrar todo
+  mostrarLogin();
+});
 
 document.getElementById("btnLooker").addEventListener("click", () => {
   window.open("https://app.powerbi.com/view?r=eyJrIjoiNGVkMDVlMzYtN2M0My00NDZkLTgxNGEtYjk2NjViYWM0N2Q3IiwidCI6ImFmZWNhMzc2LTNjOGUtNDM1MS1iODMzLTllYWY4YzI2ODMwMCIsImMiOjR9", "_blank");
