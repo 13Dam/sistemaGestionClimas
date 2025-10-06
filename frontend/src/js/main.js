@@ -288,6 +288,8 @@ async function cargarHistorico() {
 
     data.forEach(item => {
       const date = new Date(item.receivedAt);
+
+      const isoDate = date.toISOString(); // formato: 2025-10-31T08:15:23.000Z
       const day = String(date.getDate()).padStart(2, "0");
       const month = String(date.getMonth() + 1).padStart(2, "0");
       const year = date.getFullYear();
@@ -297,14 +299,15 @@ async function cargarHistorico() {
       const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 
       const row = `
-        <tr>
-          <td>${item.city}</td>
-          <td>${item.temperature.toFixed(1)}</td>
-          <td>${formattedDate}</td>
-        </tr>
-      `;
+    <tr>
+      <td>${item.city}</td>
+      <td>${item.temperature.toFixed(1)}</td>
+      <td data-order="${isoDate}">${formattedDate}</td>
+    </tr>
+  `;
       tbody.insertAdjacentHTML("beforeend", row);
     });
+
 
     actualizarEstadisticas(data);
 
@@ -316,6 +319,7 @@ async function cargarHistorico() {
     // Inicializar DataTables
     $('#tablaHistorico').DataTable({
       pageLength: 5, // 3 a 5 registros por página
+      order: [[2, 'desc']],
       lengthMenu: [3, 5, 10, 25],
       language: {
         search: "🔍 Buscar:",

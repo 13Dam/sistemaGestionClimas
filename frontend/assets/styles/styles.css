@@ -153,3 +153,15 @@ h1 {
 .card-body-estadisticas p {
   margin-bottom: 5px;
 }
+
+.temp-shanghai {
+  color: #E74C3C !important; /* rojo del gráfico */
+}
+
+.temp-berlin {
+  color: #2980B9 !important; /* azul del gráfico */
+}
+
+.temp-rio {
+  color: #27AE60 !important; /* verde del gráfico */
+}
